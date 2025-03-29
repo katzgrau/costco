@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costco List</title>
+    <style>
+        :root {
+            --primary-color: #0073a8;
+            --secondary-color: #e5f3f9;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --dark-color: #333;
+            --light-color: #f8f9fa;
+            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding-bottom: 100px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .category {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .category-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header .count {
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.8rem;
+            min-width: 24px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: 0.5rem;
+        }
+
+        .category-content {
+            padding: 0.5rem;
+            display: none;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item label {
+            margin-left: 0.5rem;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .final-list {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .final-list h2 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .final-list ul {
+            list-style-type: none;
+            margin-bottom: 1rem;
+        }
+
+        .final-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .final-list li:last-child {
+            border-bottom: none;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            padding: 1rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .btn-copy {
+            background-color: var(--primary-color);
+            color: white;
+            flex-grow: 3;
+            margin-right: 0.5rem;
+        }
+
+        .btn-reset {
+            background-color: var(--danger-color);
+            color: white;
+            flex-grow: 1;
+        }
+
+        .btn-copy:hover {
+            background-color: #005a85;
+        }
+
+        .btn-reset:hover {
+            background-color: #bd2130;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            box-shadow: var(--box-shadow);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+            flex-grow: 1;
+        }
+
+        .btn-confirm {
+            background-color: var(--danger-color);
+            color: white;
+            flex-grow: 1;
+        }
+
+        .summary {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Expand/collapse indicator */
+        .category-header .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .category-header .arrow.down {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Costco List</h1>
+    </header>
+
+    <div class="container">
+        <div class="summary" id="summary">
+            0 items selected
+        </div>
+
+        <div id="categories-container">
+            <!-- Categories will be loaded here dynamically -->
+        </div>
+
+        <div class="final-list">
+            <h2>Your Shopping List</h2>
+            <ul id="final-list">
+                <!-- Selected items will appear here -->
+                <li class="empty-message">No items selected yet</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn-copy" id="copyButton">Copy to Clipboard</button>
+        <button class="btn-reset" id="resetButton">Reset</button>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <div class="modal" id="resetModal">
+        <div class="modal-content">
+            <h3>Reset Confirmation</h3>
+            <p>Are you sure you want to reset your entire shopping list?</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="cancelReset">Cancel</button>
+                <button class="btn-confirm" id="confirmReset">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initial data structure with unique IDs
+        const costcoListData = {
+            categories: [
+                {
+                    id: "pharma",
+                    name: "Pharmaceuticals & Personal Care",
+                    items: [
+                        { id: "allergy", name: "Allergy med (Kirkland Allerclear, blue cap)" },
+                        { id: "xyzal", name: "Xyzal (kids)" },
+                        { id: "flonase", name: "Flonase Sensimist (kids)" },
+                        { id: "tylenol", name: "Children's Tylenol" },
+                        { id: "motrin", name: "Children's Motrin" },
+                        { id: "probiotic", name: "Kids probiotic gummies" },
+                        { id: "aveeno", name: "Aveeno" },
+                        { id: "razors", name: "Venus razors (Katie, NOT disposable)" },
+                        { id: "kidprotein", name: "Protein shakes (kids)" },
+                        { id: "orgain", name: "Orgain Organic protein powder" },
+                        { id: "collagen", name: "Vital Proteins collagen" }
+                    ]
+                },
+                {
+                    id: "cleaning",
+                    name: "Cleaning Supplies",
+                    items: [
+                        { id: "oxi", name: "Oxi powder" },
+                        { id: "vinegar", name: "White vinegar" },
+                        { id: "clorox", name: "Clorox Toilet Wand refills" },
+                        { id: "swiffer", name: "Swiffer (wet)" },
+                        { id: "laundry", name: "Laundry detergent" },
+                        { id: "dryer", name: "Dryer sheets" },
+                        { id: "sponges", name: "Blue sponges" }
+                    ]
+                },
+                {
+                    id: "cooking",
+                    name: "Cooking Essentials",
+                    items: [
+                        { id: "seasoning", name: "Montreal steak seasoning" },
+                        { id: "proteinmix", name: "Protein pancake mix" },
+                        { id: "kodiak", name: "Kodiak cake mix" },
+                        { id: "syrup", name: "Syrup" },
+                        { id: "peanutbutter", name: "Organic peanut butter" },
+                        { id: "jelly", name: "Organic jelly" }
+                    ]
+                },
+                {
+                    id: "dairy",
+                    name: "Baking & Dairy",
+                    items: [
+                        { id: "milk", name: "Organic whole milk" },
+                        { id: "creamer", name: "Half & half creamer" },
+                        { id: "almondmilk", name: "Almond milk (Kirkland unsweetened vanilla)" },
+                        { id: "eggs", name: "Organic eggs" },
+                        { id: "butter", name: "Butter (Kerrygold)" },
+                        { id: "laughingcow", name: "Laughing Cow cheese" }
+                    ]
+                },
+                {
+                    id: "deli",
+                    name: "Deli & Cold",
+                    items: [
+                        { id: "turkey", name: "Turkey" },
+                        { id: "cheese", name: "Cheese" },
+                        { id: "yogurt", name: "Yogurt smoothies or pouches" },
+                        { id: "icedcoffee", name: "Iced coffee (Starbucks)" },
+                        { id: "kevins", name: "Kevin's meals" },
+                        { id: "whole30", name: "Whole30 chicken" }
+                    ]
+                },
+                {
+                    id: "frozen",
+                    name: "Frozen",
+                    items: [
+                        { id: "dinner", name: "Something for dinner" }
+                    ]
+                },
+                {
+                    id: "paper",
+                    name: "Paper Goods & Household",
+                    items: [
+                        { id: "papertowels", name: "Paper towels" },
+                        { id: "toiletpaper", name: "Toilet paper" },
+                        { id: "garbageBags", name: "Kitchen garbage bags" },
+                        { id: "microfiber", name: "Microfiber towels (yellow)" },
+                        { id: "babywipes", name: "Baby wipes" },
+                        { id: "lintroller", name: "Lint roller" }
+                    ]
+                },
+                {
+                    id: "beverages",
+                    name: "Soda & Beverages",
+                    items: [
+                        { id: "honestjuice", name: "Honest juice" },
+                        { id: "liquidiv", name: "Sugar-free Liquid IV" },
+                        { id: "seltzer", name: "Seltzer (like Poppi, Spindrift)" },
+                        { id: "miniwater", name: "Mini water bottles" },
+                        { id: "disneywater", name: "Case of water (Disney)" }
+                    ]
+                },
+                {
+                    id: "meat",
+                    name: "Meat",
+                    items: [
+                        { id: "chicken", name: "Chicken breasts" },
+                        { id: "groundbeef", name: "Ground beef" },
+                        { id: "meatloaf", name: "Meatloaf" },
+                        { id: "steak", name: "Steak" }
+                    ]
+                },
+                {
+                    id: "produce",
+                    name: "Bread & Produce",
+                    items: [
+                        { id: "bread", name: "Bread (for garlic bread?)" },
+                        { id: "strawberries", name: "Strawberries (preferably hydro grow)" },
+                        { id: "apples", name: "Organic apples" },
+                        { id: "blueberries", name: "Blueberries" },
+                        { id: "veggieplatter", name: "Veggie platter or mini ones" },
+                        { id: "salad", name: "Bagged salad" }
+                    ]
+                },
+                {
+                    id: "snacks",
+                    name: "Snacks",
+                    items: [
+                        { id: "piratesbooty", name: "Pirate's Booty (snack packs)" },
+                        { id: "gogosqueez", name: "Gogosqueez pouches" },
+                        { id: "snackpacks", name: "Snack packs (x2)" },
+                        { id: "superbowl", name: "Super Bowl snacks" }
+                    ]
+                },
+                {
+                    id: "misc",
+                    name: "Miscellaneous",
+                    items: [
+                        { id: "batteries", name: "Batteries (AA, AAA, and rectangle)" },
+                        { id: "dogbones", name: "Dog bones (like rawhide)" },
+                        { id: "bullysticks", name: "Bully sticks" },
+                        { id: "dogfood", name: "Miles' dog food" },
+                        { id: "birdseed", name: "Bird seed" },
+                        { id: "socks", name: "Socks (Katie)" }
+                    ]
+                }
+            ]
+        };
+
+        // DOM elements
+        const categoriesContainer = document.getElementById('categories-container');
+        const finalList = document.getElementById('final-list');
+        const copyButton = document.getElementById('copyButton');
+        const resetButton = document.getElementById('resetButton');
+        const toast = document.getElementById('toast');
+        const resetModal = document.getElementById('resetModal');
+        const cancelReset = document.getElementById('cancelReset');
+        const confirmReset = document.getElementById('confirmReset');
+        const summary = document.getElementById('summary');
+
+        // State management
+        let selectedItems = {};
+
+        // Load saved state from localStorage
+        function loadSavedState() {
+            const savedState = localStorage.getItem('costcoListState');
+            if (savedState) {
+                selectedItems = JSON.parse(savedState);
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('costcoListState', JSON.stringify(selectedItems));
+        }
+
+        // Initialize the app
+        function initApp() {
+            loadSavedState();
+            renderCategories();
+            updateFinalList();
+            updateSummary();
+            
+            // Event listeners
+            copyButton.addEventListener('click', copyToClipboard);
+            resetButton.addEventListener('click', showResetConfirmation);
+            cancelReset.addEventListener('click', hideResetConfirmation);
+            confirmReset.addEventListener('click', resetList);
+        }
+
+        // Render categories and items
+        function renderCategories() {
+            categoriesContainer.innerHTML = '';
+            
+            costcoListData.categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category';
+                
+                // Count selected items
+                const selectedCount = category.items.filter(item => selectedItems[item.id]).length;
+                
+                categoryElement.innerHTML = `
+                    <div class="category-header" data-category="${category.id}">
+                        <span>${category.name}</span>
+                        <span class="count">${selectedCount}/${category.items.length}</span>
+                        <span class="arrow down">›</span>
+                    </div>
+                    <div class="category-content active" id="category-${category.id}">
+                        ${category.items.map(item => `
+                            <div class="item">
+                                <input type="checkbox" id="${item.id}" 
+                                    ${selectedItems[item.id] ? 'checked' : ''}>
+                                <label for="${item.id}">${item.name}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                categoriesContainer.appendChild(categoryElement);
+                
+                // Add event listener for category toggle
+                const categoryHeader = categoryElement.querySelector('.category-header');
+                categoryHeader.addEventListener('click', toggleCategory);
+                
+                // Add event listeners for checkboxes
+                const checkboxes = categoryElement.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', handleItemToggle);
+                });
+            });
+        }
+
+        // Toggle category expansion
+        function toggleCategory(e) {
+            const categoryId = this.getAttribute('data-category');
+            const contentElement = document.getElementById(`category-${categoryId}`);
+            const arrowElement = this.querySelector('.arrow');
+            
+            contentElement.classList.toggle('active');
+            arrowElement.classList.toggle('down');
+        }
+
+        // Handle item checkbox toggle
+        function handleItemToggle(e) {
+            const itemId = this.id;
+            const isChecked = this.checked;
+            
+            // Update selected items
+            if (isChecked) {
+                // Find the item details
+                let itemName = '';
+                for (const category of costcoListData.categories) {
+                    const item = category.items.find(item => item.id === itemId);
+                    if (item) {
+                        itemName = item.name;
+                        break;
+                    }
+                }
+                selectedItems[itemId] = itemName;
+            } else {
+                delete selectedItems[itemId];
+            }
+            
+            // Update the UI
+            updateFinalList();
+            updateCategoryCounters();
+            updateSummary();
+            
+            // Save state
+            saveState();
+        }
+
+        // Update the category counters
+        function updateCategoryCounters() {
+            costcoListData.categories.forEach(category => {
+                const selectedCount = category.items.filter(item => selectedItems[item.id]).length;
+                const countElement = document.querySelector(`.category-header[data-category="${category.id}"] .count`);
+                if (countElement) {
+                    countElement.textContent = `${selectedCount}/${category.items.length}`;
+                }
+            });
+        }
+
+        // Update the final list
+        function updateFinalList() {
+            const selectedCount = Object.keys(selectedItems).length;
+            
+            if (selectedCount === 0) {
+                finalList.innerHTML = '<li class="empty-message">No items selected yet</li>';
+                return;
+            }
+            
+            finalList.innerHTML = '';
+            
+            // Group by category
+            const categorizedItems = {};
+            
+            for (const category of costcoListData.categories) {
+                const categoryItems = category.items.filter(item => selectedItems[item.id]);
+                
+                if (categoryItems.length > 0) {
+                    categorizedItems[category.name] = categoryItems.map(item => item.name);
+                }
+            }
+            
+            // Add to final list by category
+            for (const [categoryName, items] of Object.entries(categorizedItems)) {
+                const categoryHeader = document.createElement('li');
+                categoryHeader.innerHTML = `<strong>${categoryName}</strong>`;
+                finalList.appendChild(categoryHeader);
+                
+                items.forEach(itemName => {
+                    const itemElement = document.createElement('li');
+                    itemElement.textContent = `• ${itemName}`;
+                    finalList.appendChild(itemElement);
+                });
+            }
+        }
+
+        // Update the summary count
+        function updateSummary() {
+            const count = Object.keys(selectedItems).length;
+            summary.textContent = `${count} item${count !== 1 ? 's' : ''} selected`;
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const selectedCount = Object.keys(selectedItems).length;
+            
+            if (selectedCount === 0) {
+                showToast('No items to copy!');
+                return;
+            }
+            
+            let clipboardText = 'Costco Shopping List\n\n';
+            
+            // Group by category
+            const categorizedItems = {};
+            
+            for (const category of costcoListData.categories) {
+                const categoryItems = category.items.filter(item => selectedItems[item.id]);
+                
+                if (categoryItems.length > 0) {
+                    categorizedItems[category.name] = categoryItems.map(item => item.name);
+                }
+            }
+            
+            // Build clipboard text
+            for (const [categoryName, items] of Object.entries(categorizedItems)) {
+                clipboardText += `${categoryName}\n`;
+                items.forEach(itemName => {
+                    clipboardText += `• ${itemName}\n`;
+                });
+                clipboardText += '\n';
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(clipboardText)
+                .then(() => {
+                    showToast('Copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                    showToast('Failed to copy!');
+                });
+        }
+
+        // Show toast message
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Show reset confirmation modal
+        function showResetConfirmation() {
+            resetModal.style.display = 'flex';
+        }
+
+        // Hide reset confirmation modal
+        function hideResetConfirmation() {
+            resetModal.style.display = 'none';
+        }
+
+        // Reset the list
+        function resetList() {
+            selectedItems = {};
+            saveState();
+            renderCategories();
+            updateFinalList();
+            updateSummary();
+            hideResetConfirmation();
+            showToast('List has been reset');
+        }
+
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
