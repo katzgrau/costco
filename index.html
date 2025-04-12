@@ -99,8 +99,8 @@
             border-bottom: 1px solid #eee;
         }
 
-        .item:last-child {
-            border-bottom: none;
+        .item.extras-item {
+            padding-right: 0;
         }
 
         .item label {
@@ -113,6 +113,18 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+        }
+
+        .delete-item {
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .delete-item:hover {
+            opacity: 1;
         }
 
         .final-list {
@@ -263,6 +275,35 @@
         .category-header .arrow.down {
             transform: rotate(90deg);
         }
+
+        .add-item {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            align-items: center;
+        }
+
+        .add-item input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .add-item button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .add-item button:hover {
+            background-color: #005a85;
+        }
     </style>
 </head>
 <body>
@@ -314,107 +355,110 @@
                     id: "pharma",
                     name: "Pharmaceuticals & Personal Care",
                     items: [
-                        { id: "allergy", name: "Allergy med (Kirkland Allerclear, blue cap)" },
-                        { id: "xyzal", name: "Xyzal (kids)" },
-                        { id: "flonase", name: "Flonase Sensimist (kids)" },
-                        { id: "tylenol", name: "Children's Tylenol" },
-                        { id: "motrin", name: "Children's Motrin" },
-                        { id: "probiotic", name: "Kids probiotic gummies" },
-                        { id: "aveeno", name: "Aveeno" },
-                        { id: "razors", name: "Venus razors (Katie, NOT disposable)" },
-                        { id: "kidprotein", name: "Protein shakes (kids)" },
-                        { id: "orgain", name: "Orgain Organic protein powder" },
-                        { id: "collagen", name: "Vital Proteins collagen" },
+                        { id: "allergy", name: "Allergy Medicine (Kirkland Allerclear)" },
+                        { id: "aveeno", name: "Aveeno (Moisturizer)" },
+                        { id: "collagen", name: "Collagen (Vital Proteins)" },
+                        { id: "flonase", name: "Flonase (Kids Sensimist)" },
+                        { id: "gillette", name: "Gillette (Razors)" },
+                        { id: "motrinadult", name: "Motrin (Adult)" },
+                        { id: "motrin", name: "Motrin (Children's)" },
+                        { id: "probiotic", name: "Probiotic (Kids Gummies)" },
+                        { id: "protein", name: "Protein (Orgain Organic Powder)" },
+                        { id: "kidprotein", name: "Protein Shakes (Kids)" },
+                        { id: "razors", name: "Razors (Venus, Katie)" },
+                        { id: "shampoo", name: "Shampoo and Conditioner" },
+                        { id: "toothpaste", name: "Toothpaste" },
+                        { id: "tylenol", name: "Tylenol (Children's)" },
                         { id: "whitestrips", name: "White Strips" },
+                        { id: "xyzal", name: "Xyzal (Kids)" }
                     ]
                 },
                 {
                     id: "cleaning",
                     name: "Cleaning Supplies",
                     items: [
-                        { id: "oxi", name: "Oxi powder" },
-                        { id: "vinegar", name: "White vinegar" },
-                        { id: "clorox", name: "Clorox Toilet Wand refills" },
-                        { id: "swiffer", name: "Swiffer (wet)" },
-                        { id: "laundry", name: "Laundry detergent" },
-                        { id: "dryer", name: "Dryer sheets" },
-                        { id: "sponges", name: "Blue sponges" }
+                        { id: "clorox", name: "Clorox (Toilet Wand Refills)" },
+                        { id: "dryer", name: "Dryer Sheets" },
+                        { id: "laundry", name: "Laundry Detergent" },
+                        { id: "oxi", name: "Oxi (Powder)" },
+                        { id: "sponges", name: "Sponges (Blue)" },
+                        { id: "swiffer", name: "Swiffer (Wet)" },
+                        { id: "vinegar", name: "Vinegar (White)" }
                     ]
                 },
                 {
                     id: "paper",
                     name: "Paper Goods & Household",
                     items: [
-                        { id: "papertowels", name: "Paper towels" },
-                        { id: "utensils", name: "Plastic utensils" },
-                        { id: "toiletpaper", name: "Toilet paper" },
-                        { id: "garbageBags", name: "Kitchen garbage bags" },
-                        { id: "microfiber", name: "Microfiber towels (yellow)" },
-                        { id: "babywipes", name: "Baby wipes" },
-                        { id: "lintroller", name: "Lint roller" }
+                        { id: "babywipes", name: "Baby Wipes" },
+                        { id: "garbageBags", name: "Garbage Bags (Kitchen)" },
+                        { id: "lintroller", name: "Lint Roller" },
+                        { id: "microfiber", name: "Microfiber Towels (Yellow)" },
+                        { id: "papertowels", name: "Paper Towels" },
+                        { id: "utensils", name: "Plastic Utensils" },
+                        { id: "toiletpaper", name: "Toilet Paper" }
                     ]
-                },                
+                },
                 {
                     id: "cooking",
                     name: "Cooking Essentials",
                     items: [
-                        { id: "seasoning", name: "Montreal steak seasoning" },
-                        { id: "proteinmix", name: "Protein pancake mix" },
-                        { id: "kodiak", name: "Kodiak cake mix" },
-                        { id: "syrup", name: "Syrup" },
-                        { id: "peanutbutter", name: "Organic peanut butter" },
-                        { id: "jelly", name: "Organic jelly" }
+                        { id: "kodiak", name: "Kodiak (Cake Mix)" },
+                        { id: "peanutbutter", name: "Peanut Butter (Organic)" },
+                        { id: "proteinmix", name: "Protein (Pancake Mix)" },
+                        { id: "seasoning", name: "Seasoning (Montreal Steak)" },
+                        { id: "syrup", name: "Syrup" }
                     ]
                 },
                 {
                     id: "dairy",
                     name: "Baking & Dairy",
                     items: [
-                        { id: "milk", name: "Organic whole milk" },
-                        { id: "creamer", name: "Half & half creamer" },
-                        { id: "almondmilk", name: "Almond milk (Kirkland unsweetened vanilla)" },
-                        { id: "eggs", name: "Organic eggs" },
+                        { id: "almondmilk", name: "Almond Milk (Kirkland Unsweetened Vanilla)" },
                         { id: "butter", name: "Butter (Kerrygold)" },
-                        { id: "laughingcow", name: "Laughing Cow cheese" }
+                        { id: "creamer", name: "Creamer (Half & Half)" },
+                        { id: "eggs", name: "Eggs (Organic)" },
+                        { id: "laughingcow", name: "Laughing Cow (Cheese)" },
+                        { id: "milk", name: "Milk (Organic Whole)" }
                     ]
                 },
                 {
                     id: "deli",
                     name: "Deli & Cold",
                     items: [
-                        { id: "turkey", name: "Turkey" },
                         { id: "cheese", name: "Cheese" },
-                        { id: "snackpacks", name: "Snack packs" },
-                        { id: "yogurt", name: "Yogurt smoothies or pouches" },
-                        { id: "icedcoffee", name: "Iced coffee (Starbucks)" },
-                        { id: "kevins", name: "Kevin's meals" },
-                        { id: "whole30", name: "Whole30 chicken" }
+                        { id: "icedcoffee", name: "Coffee (Starbucks Iced)" },
+                        { id: "kevins", name: "Kevin's (Meals)" },
+                        { id: "snackpacks", name: "Snack Packs" },
+                        { id: "turkey", name: "Turkey" },
+                        { id: "whole30", name: "Whole30 (Chicken)" },
+                        { id: "yogurt", name: "Yogurt (Smoothies/Pouches)" }
                     ]
                 },
                 {
                     id: "frozen",
                     name: "Frozen",
                     items: [
-                        { id: "dinner", name: "Something for dinner" }
+                        { id: "dinner", name: "Dinner (Something For)" }
                     ]
                 },
                 {
                     id: "beverages",
                     name: "Soda & Beverages",
                     items: [
-                        { id: "honestjuice", name: "Honest juice" },
-                        { id: "liquidiv", name: "Sugar-free Liquid IV" },
-                        { id: "seltzer", name: "Seltzer (like Poppi, Spindrift)" },
-                        { id: "miniwater", name: "Mini water bottles" },
-                        { id: "disneywater", name: "Case of water (Disney)" }
+                        { id: "honestjuice", name: "Honest (Juice)" },
+                        { id: "liquidiv", name: "Liquid IV (Sugar-Free)" },
+                        { id: "seltzer", name: "Seltzer (Poppi/Spindrift)" },
+                        { id: "disneywater", name: "Water (Disney Case)" },
+                        { id: "miniwater", name: "Water (Mini Bottles)" }
                     ]
                 },
                 {
                     id: "meat",
                     name: "Meat",
                     items: [
-                        { id: "chicken", name: "Chicken breasts" },
-                        { id: "groundbeef", name: "Ground beef" },
+                        { id: "chicken", name: "Chicken (Breasts)" },
+                        { id: "groundbeef", name: "Ground Beef" },
                         { id: "meatloaf", name: "Meatloaf" },
                         { id: "steak", name: "Steak" }
                     ]
@@ -423,36 +467,41 @@
                     id: "produce",
                     name: "Bread & Produce",
                     items: [
-                        { id: "bread", name: "Bread (for garlic bread?)" },
-                        { id: "strawberries", name: "Strawberries (preferably hydro grow)" },
-                        { id: "apples", name: "Organic apples" },
+                        { id: "apples", name: "Apples (Organic)" },
                         { id: "blueberries", name: "Blueberries" },
-                        { id: "veggieplatter", name: "Veggie platter or mini ones" },
-                        { id: "salad", name: "Bagged salad" }
+                        { id: "bread", name: "Bread (For Garlic Bread)" },
+                        { id: "salad", name: "Salad (Bagged)" },
+                        { id: "strawberries", name: "Strawberries (Hydro Grow)" },
+                        { id: "veggieplatter", name: "Veggie Platter (Regular/Mini)" }
                     ]
                 },
                 {
                     id: "snacks",
                     name: "Snacks",
                     items: [
-                        { id: "piratesbooty", name: "Pirate's Booty (snack packs)" },
-                        { id: "gogosqueez", name: "Gogosqueez pouches" },
-                        { id: "gum", name: "Trident Gum" },
-                        { id: "snackpacks", name: "Snack packs (x2)" },
-                        { id: "superbowl", name: "Super Bowl snacks" }
+                        { id: "gogosqueez", name: "Gogosqueez (Pouches)" },
+                        { id: "gum", name: "Gum (Trident)" },
+                        { id: "piratesbooty", name: "Pirate's Booty (Snack Packs)" },
+                        { id: "snackpacks", name: "Snack Packs (x2)" },
+                        { id: "superbowl", name: "Super Bowl (Snacks)" }
                     ]
                 },
                 {
                     id: "misc",
                     name: "Miscellaneous",
                     items: [
-                        { id: "batteries", name: "Batteries (AA, AAA, and rectangle)" },
-                        { id: "dogbones", name: "Dog bones (like rawhide)" },
-                        { id: "bullysticks", name: "Bully sticks" },
-                        { id: "dogfood", name: "Miles' dog food" },
-                        { id: "birdseed", name: "Bird seed" },
+                        { id: "batteries", name: "Batteries (AA/AAA/Rectangle)" },
+                        { id: "birdseed", name: "Bird Seed" },
+                        { id: "bullysticks", name: "Bully Sticks" },
+                        { id: "dogbones", name: "Dog Bones (Rawhide)" },
+                        { id: "dogfood", name: "Dog Food (Miles')" },
                         { id: "socks", name: "Socks (Katie)" }
                     ]
+                },
+                {
+                    id: "extras",
+                    name: "Extras",
+                    items: []
                 }
             ]
         };
@@ -474,14 +523,19 @@
         // Load saved state from localStorage
         function loadSavedState() {
             const savedState = localStorage.getItem('costcoListState');
+            const savedData = localStorage.getItem('costcoListData');
             if (savedState) {
                 selectedItems = JSON.parse(savedState);
+            }
+            if (savedData) {
+                costcoListData.categories = JSON.parse(savedData).categories;
             }
         }
 
         // Save state to localStorage
         function saveState() {
             localStorage.setItem('costcoListState', JSON.stringify(selectedItems));
+            localStorage.setItem('costcoListData', JSON.stringify(costcoListData));
         }
 
         // Initialize the app
@@ -517,12 +571,21 @@
                     </div>
                     <div class="category-content active" id="category-${category.id}">
                         ${category.items.map(item => `
-                            <div class="item">
+                            <div class="item ${category.id === 'extras' ? 'extras-item' : ''}">
                                 <input type="checkbox" id="${item.id}" 
                                     ${selectedItems[item.id] ? 'checked' : ''}>
                                 <label for="${item.id}">${item.name}</label>
+                                ${category.id === 'extras' ? `
+                                    <span class="delete-item" data-item-id="${item.id}">🗑️</span>
+                                ` : ''}
                             </div>
                         `).join('')}
+                        ${category.id === 'extras' ? `
+                            <div class="add-item">
+                                <input type="text" id="newExtraItem" placeholder="Add new item" />
+                                <button id="addExtraItemButton">Add</button>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
                 
@@ -537,6 +600,20 @@
                 checkboxes.forEach(checkbox => {
                     checkbox.addEventListener('change', handleItemToggle);
                 });
+
+                // Add event listeners for delete buttons in "Extras"
+                if (category.id === 'extras') {
+                    const deleteButtons = categoryElement.querySelectorAll('.delete-item');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', confirmDeleteItem);
+                    });
+                }
+
+                // Add event listener for adding new items in "Extras"
+                if (category.id === 'extras') {
+                    const addExtraItemButton = categoryElement.querySelector('#addExtraItemButton');
+                    addExtraItemButton.addEventListener('click', addExtraItem);
+                }
             });
         }
 
@@ -698,12 +775,66 @@
         // Reset the list
         function resetList() {
             selectedItems = {};
-            saveState();
+            // Reset the Extras category to empty
+            costcoListData.categories.find(cat => cat.id === 'extras').items = [];
+            // Remove both items from localStorage
+            localStorage.removeItem('costcoListState');
+            localStorage.removeItem('costcoListData');
             renderCategories();
             updateFinalList();
             updateSummary();
             hideResetConfirmation();
             showToast('List has been reset');
+        }
+
+        // Function to add a new item to the "Extras" category
+        function addExtraItem() {
+            const newItemInput = document.getElementById('newExtraItem');
+            const newItemName = newItemInput.value.trim();
+            
+            if (newItemName) {
+                const newItemId = `extra-${Date.now()}`; // Unique ID based on timestamp
+                costcoListData.categories.find(cat => cat.id === 'extras').items.push({
+                    id: newItemId,
+                    name: newItemName
+                });
+                selectedItems[newItemId] = newItemName; // Automatically select the new item
+                newItemInput.value = ''; // Clear the input field
+                renderCategories(); // Re-render categories
+                updateFinalList(); // Update the final list
+                updateSummary(); // Update the summary
+                saveState(); // Save the updated state
+            }
+        }
+
+        // Add these new functions
+        function confirmDeleteItem(e) {
+            const itemId = e.target.dataset.itemId;
+            const extrasCategory = costcoListData.categories.find(cat => cat.id === 'extras');
+            const item = extrasCategory.items.find(item => item.id === itemId);
+            
+            if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
+                deleteItem(itemId);
+            }
+        }
+
+        function deleteItem(itemId) {
+            // Remove from costcoListData
+            const extrasCategory = costcoListData.categories.find(cat => cat.id === 'extras');
+            extrasCategory.items = extrasCategory.items.filter(item => item.id !== itemId);
+            
+            // Remove from selectedItems if it was selected
+            if (selectedItems[itemId]) {
+                delete selectedItems[itemId];
+            }
+            
+            // Update UI
+            renderCategories();
+            updateFinalList();
+            updateSummary();
+            saveState();
+            
+            showToast('Item deleted');
         }
 
         // Initialize the app when the DOM is loaded
